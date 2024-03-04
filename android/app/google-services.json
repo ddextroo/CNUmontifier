@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "760693782485",
+    "project_id": "cnumontifier",
+    "storage_bucket": "cnumontifier.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760693782485:android:d1a59f1c1eb13408306f5c",
+        "android_client_info": {
+          "package_name": "com.example.cnumontifier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760693782485-r5ou1t4ostjoteiuqth4ls2kf2cj98dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZosLu-U9SELC4UaoluZb7mQU7mmHLhk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760693782485-r5ou1t4ostjoteiuqth4ls2kf2cj98dl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

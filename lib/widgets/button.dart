@@ -1,6 +1,6 @@
+import 'package:cnumontifier/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:cnumontifier/widgets/colors.dart';
 import 'text.dart';
 
 class CustomButton extends StatelessWidget {

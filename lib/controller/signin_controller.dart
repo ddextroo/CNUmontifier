@@ -1,13 +1,18 @@
 import 'package:cnumontifier/service/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInController {
- final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService();
 
- Future<void> signInWithGoogle() async {
-    await _authService.signInWithGoogle();
- }
+  Future<User?> signInWithGoogle() async {
+    final UserCredential? userCredential =
+        await _authService.signInWithGoogle();
+    if (userCredential != null) {
+      await _authService.userStore(userCredential.user);
+    }
+  }
 
- Future<void> signOut() async {
+  Future<void> signOut() async {
     await _authService.signOut();
- }
+  }
 }

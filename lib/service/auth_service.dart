@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -18,5 +20,22 @@ class AuthService {
  Future<void> signOut() async {
     await _auth.signOut();
     await _googleSignIn.signOut();
+ }
+
+ Future<void>userStore(User? user) async {
+    if (user != null) {
+      CollectionReference users = FirebaseFirestore.instance.collection('users');
+      return users
+        .doc(user.uid)
+        .set({
+          'fullname' : user.displayName,
+          'avatar' : user.photoURL,
+          'uid' : user.uid,
+          'email': user.email,
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+        })
+        .then((value) => debugPrint("Added"))
+        .catchError((error) => debugPrint("Error ${error}"));
+    }
  }
 }

@@ -1,3 +1,4 @@
+import 'package:cnumontifier/view/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cnumontifier/view/splash.dart';
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/splash': (context) => Splash(),
-        '/login': (context) => Login()
+        '/login': (context) => Login(),
+        '/home': (context) => Home()
       },
     );
   }

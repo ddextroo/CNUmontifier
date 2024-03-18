@@ -1,155 +1,203 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'package:cnumontifier/widgets/CustomText.dart';
-import 'package:cnumontifier/widgets/colors.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
+import './../classifier/classifier.dart';
+import './.././styles.dart';
+import './../widgets/plant_photo_view.dart';
 import 'package:image/image.dart' as img;
-import 'package:tflite_flutter/tflite_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+const _labelsFileName = 'assets/tensorflow/labels.txt';
+const _modelFileName = 'tensorflow/model_unquant.tflite';
+
 
 class ScannerScreen extends StatefulWidget {
-  @override
-  _ScannerScreenState createState() => _ScannerScreenState();
+ @override
+ _ScannerScreenState createState() => _ScannerScreenState();
+}
+
+enum _ResultStatus {
+  notStarted,
+  notFound,
+  found,
 }
 
 class _ScannerScreenState extends State<ScannerScreen> {
-  late CameraController cameraController;
-  bool initialized = false;
-  bool isWorking = false;
-  String? prediction;
+  bool _isAnalyzing = false;
+  final picker = ImagePicker();
+  File? _selectedImageFile;
+
+   _ResultStatus _resultStatus = _ResultStatus.notStarted;
+  String _plantLabel = ''; // Name of Error Message
+  double _accuracy = 0.0;
+
+  late Classifier? _classifier;
 
   @override
   void initState() {
     super.initState();
-    _requestCameraPermission().then((_) {
-      initialize();
-    });
+    _loadClassifier();
   }
 
-  Future<void> _requestCameraPermission() async {
-    PermissionStatus status = await Permission.camera.status;
-    if (status.isDenied) {
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.camera,
-      ].request();
-      status = statuses[Permission.camera]!;
-    }
-
-    if (status.isGranted) {
-      // Permission granted, proceed with camera access.
-    } else {
-      // Permission denied, handle accordingly.
-    }
-  }
-
-  Future<void> initialize() async {
-    final cameras = await availableCameras();
-    cameraController = CameraController(
-      cameras[0],
-      ResolutionPreset.medium,
+    Future<void> _loadClassifier() async {
+    debugPrint(
+      'Start loading of Classifier with '
+      'labels at $_labelsFileName, '
+      'model at $_modelFileName',
     );
-    await cameraController.initialize();
-    await cameraController.startImageStream((image) {
-      if (!isWorking) {
-        processCameraImage(image);
-      }
-    });
-    setState(() {
-      initialized = true;
-    });
+    final classifier = await Classifier.loadWith(
+      labelsFileName: _labelsFileName,
+      modelFileName: _modelFileName,
+    );
+    _classifier = classifier;
   }
 
-  Future<void> processCameraImage(CameraImage cameraImage) async {
-    setState(() {
-      isWorking = true;
-    });
-
-    img.Image image = convertCameraImage(cameraImage);
-    prediction = await classifyImage(image);
-
-    setState(() {
-      isWorking = false;
-    });
-  }
-
-  img.Image convertCameraImage(CameraImage cameraImage) {
-    // Convert the CameraImage to an img.Image
-    // This step depends on the format your model expects
-    // For demonstration, we'll return a dummy image
-    return img.Image(150, 150);
-  }
-
-  Future<String> classifyImage(img.Image image) async {
-    // Load the model
-    Interpreter interpreter =
-        await Interpreter.fromAsset('assets/tensorflow/model_unquant.tflite');
-
-    // Preprocess the image
-    img.Image resizedImage = img.copyResize(image, width: 150, height: 150);
-    Float32List inputBytes = Float32List(1 * 150 * 150 * 3);
-    int pixelIndex = 0;
-    for (int y = 0; y < resizedImage.height; y++) {
-      for (int x = 0; x < resizedImage.width; x++) {
-        int pixel = resizedImage.getPixel(x, y);
-        inputBytes[pixelIndex++] = img.getRed(pixel) / 127.5 - 1.0;
-        inputBytes[pixelIndex++] = img.getGreen(pixel) / 127.5 - 1.0;
-        inputBytes[pixelIndex++] = img.getBlue(pixel) / 127.5 - 1.0;
-      }
-    }
-
-    // Run the model
-    final input = inputBytes.reshape([1, 150, 150, 3]);
-    final output = Float32List(1 * 4).reshape([1, 4]);
-    interpreter.run(input, output);
-
-    // Postprocess the output
-    final predictionResult = output[0] as List<double>;
-    double maxElement = predictionResult.reduce(
-        (double maxElement, double element) =>
-            element > maxElement ? element : maxElement);
-    int index = predictionResult.indexOf(maxElement);
-
-    // Return the label of the predicted object
-    // This assumes you have a list of labels in the same order as your model's output
-    List<String> labels = ['CEBUENSE', 'MINDANAENSE'];
-    //0 CEBUENSE
-    //1 MINDANAENSE
-
-    return labels[index];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!initialized) {
-      return Container();
-    }
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
-          child: SizedBox(
-            height: MediaQuery.of(context).padding.top,
+ @override
+ Widget build(BuildContext context) {
+    return Container(
+      color: kBgColor,
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: _buildTitle(),
           ),
-        ),
-      body: Stack(
-        children: <Widget>[
-          CameraPreview(cameraController),
-          Center(
-            child: CustomText(
-              text: prediction ?? 'No prediction',
-              fontSize: 14,
-              textAlign: TextAlign.center,
-              color: ColorTheme.textColorLight,
-            ),
+          const SizedBox(height: 20),
+          _buildPhotolView(),
+          const SizedBox(height: 10),
+          _buildResultView(),
+          const Spacer(flex: 5),
+          _buildPickPhotoButton(
+            title: 'Take a photo',
+            source: ImageSource.camera,
           ),
+          _buildPickPhotoButton(
+            title: 'Pick from gallery',
+            source: ImageSource.gallery,
+          ),
+          const Spacer(),
         ],
       ),
     );
   }
 
-  @override
-  void dispose() {
-    cameraController.dispose();
-    super.dispose();
+  Widget _buildPhotolView() {
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        PlantPhotoView(file: _selectedImageFile),
+        _buildAnalyzingText(),
+      ],
+    );
+  }
+
+  Widget _buildAnalyzingText() {
+    if (!_isAnalyzing) {
+      return const SizedBox.shrink();
+    }
+    return const Text('Analyzing...', style: kAnalyzingTextStyle);
+  }
+
+  Widget _buildTitle() {
+    return const Text(
+      'Plant Recogniser',
+      style: kTitleTextStyle,
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _buildPickPhotoButton({
+    required ImageSource source,
+    required String title,
+  }) {
+    return TextButton(
+      onPressed: () => _onPickPhoto(source),
+      child: Container(
+        width: 300,
+        height: 50,
+        color: kColorBrown,
+        child: Center(
+            child: Text(title,
+                style: const TextStyle(
+                  fontFamily: kButtonFont,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w600,
+                  color: kColorLightYellow,
+                ))),
+      ),
+    );
+  }
+
+  void _setAnalyzing(bool flag) {
+    setState(() {
+      _isAnalyzing = flag;
+    });
+  }
+
+  void _onPickPhoto(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile == null) {
+      return;
+    }
+
+    final imageFile = File(pickedFile.path);
+    setState(() {
+      _selectedImageFile = imageFile;
+    });
+
+    _analyzeImage(imageFile);
+  }
+
+  void _analyzeImage(File image) {
+    _setAnalyzing(true);
+
+    final imageInput = img.decodeImage(image.readAsBytesSync())!;
+
+    final resultCategory = _classifier!.predict(imageInput);
+    debugPrint(resultCategory.toString() + "dexter");
+
+    final result = resultCategory.score >= 0.8
+        ? _ResultStatus.found
+        : _ResultStatus.notFound;
+    final plantLabel = resultCategory.label;
+    final accuracy = resultCategory.score;
+
+    _setAnalyzing(false);
+
+    setState(() {
+      _resultStatus = result;
+      _plantLabel = plantLabel;
+      _accuracy = accuracy;
+    });
+  }
+
+  Widget _buildResultView() {
+    var title = '';
+    debugPrint(_resultStatus.toString() + "hehe");
+
+    if (_resultStatus == _ResultStatus.notFound) {
+      title = 'Fail to recognise';
+    } else if (_resultStatus == _ResultStatus.found) {
+      title = _plantLabel;
+    } else {
+      title = '';
+    }
+
+    var accuracyLabel = '';
+    if (_resultStatus == _ResultStatus.found) {
+      accuracyLabel = 'Accuracy: ${(_accuracy * 100).toStringAsFixed(2)}%';
+    }
+
+    return Column(
+      children: [
+        Text(title, style: kResultTextStyle),
+        const SizedBox(height: 10),
+        Text(accuracyLabel, style: kResultRatingTextStyle)
+      ],
+    );
   }
 }

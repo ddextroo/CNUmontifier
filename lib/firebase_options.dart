@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAZosLu-U9SELC4UaoluZb7mQU7mmHLhk4',
-    appId: '1:760693782485:android:d1a59f1c1eb13408306f5c',
+    appId: '1:760693782485:android:c7f4943ab2bb24bd306f5c',
     messagingSenderId: '760693782485',
     projectId: 'cnumontifier',
     storageBucket: 'cnumontifier.appspot.com',
@@ -66,6 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '760693782485',
     projectId: 'cnumontifier',
     storageBucket: 'cnumontifier.appspot.com',
+    androidClientId: '760693782485-th3gnrdqcouas7s7litla6ji4q9e3nbl.apps.googleusercontent.com',
     iosClientId: '760693782485-g9k9m4sf22m8kvsqmll0rjqcuk4j3j6h.apps.googleusercontent.com',
     iosBundleId: 'com.example.cnumontifier',
   );
@@ -76,6 +77,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '760693782485',
     projectId: 'cnumontifier',
     storageBucket: 'cnumontifier.appspot.com',
+    androidClientId: '760693782485-th3gnrdqcouas7s7litla6ji4q9e3nbl.apps.googleusercontent.com',
     iosClientId: '760693782485-3qgrm7u3bof71g4sqk1jqa8kbhoek16t.apps.googleusercontent.com',
     iosBundleId: 'com.example.cnumontifier.RunnerTests',
   );

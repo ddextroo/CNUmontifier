@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:760693782485:android:d1a59f1c1eb13408306f5c",
+        "mobilesdk_app_id": "1:760693782485:android:c7f4943ab2bb24bd306f5c",
         "android_client_info": {
-          "package_name": "com.example.cnumontifier"
+          "package_name": "com.ddev.cnumontifier"
         }
       },
       "oauth_client": [
@@ -29,6 +29,57 @@
             {
               "client_id": "760693782485-r5ou1t4ostjoteiuqth4ls2kf2cj98dl.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "760693782485-3qgrm7u3bof71g4sqk1jqa8kbhoek16t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cnumontifier.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760693782485:android:d1a59f1c1eb13408306f5c",
+        "android_client_info": {
+          "package_name": "com.example.cnumontifier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760693782485-th3gnrdqcouas7s7litla6ji4q9e3nbl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cnumontifier",
+            "certificate_hash": "c485d5a413c51112cda467da6782f2808f7bf689"
+          }
+        },
+        {
+          "client_id": "760693782485-r5ou1t4ostjoteiuqth4ls2kf2cj98dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZosLu-U9SELC4UaoluZb7mQU7mmHLhk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760693782485-r5ou1t4ostjoteiuqth4ls2kf2cj98dl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "760693782485-3qgrm7u3bof71g4sqk1jqa8kbhoek16t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cnumontifier.RunnerTests"
+              }
             }
           ]
         }

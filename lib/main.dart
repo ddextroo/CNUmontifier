@@ -1,6 +1,6 @@
 import 'package:cnumontifier/view/home.dart';
-import 'package:cnumontifier/view/scan/camera.dart';
-import 'package:cnumontifier/view/scan/pick_file.dart';
+import 'package:cnumontifier/view/select_map.dart';
+import 'package:cnumontifier/widgets/scan/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cnumontifier/view/splash.dart';
@@ -18,7 +18,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => Login(),
         '/home': (context) => Home(),
         '/camera': (context) => Camera(),
-        '/pick_file': (context) => PickFile()
+        '/select_map': (context) => SelectMap(),
       },
     );
   }

@@ -1,4 +1,6 @@
 import 'package:cnumontifier/view/home.dart';
+import 'package:cnumontifier/view/scan/camera.dart';
+import 'package:cnumontifier/view/scan/pick_file.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cnumontifier/view/splash.dart';
@@ -39,7 +41,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/splash': (context) => Splash(),
         '/login': (context) => Login(),
-        '/home': (context) => Home()
+        '/home': (context) => Home(),
+        '/camera': (context) => Camera(),
+        '/pick_file': (context) => PickFile()
       },
     );
   }

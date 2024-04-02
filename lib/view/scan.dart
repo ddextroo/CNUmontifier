@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cnumontifier/widgets/button.dart';
 import 'package:cnumontifier/widgets/colors.dart';
 import 'package:cnumontifier/widgets/scan/pick_file.dart';
+import 'package:cnumontifier/widgets/scan/result.dart';
 import 'package:cnumontifier/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 
 class ScannerScreen extends StatefulWidget {
   @override
@@ -46,7 +50,15 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         final String? image_path =
                             await pickImage(ImageSource.camera);
                         if (image_path != null) {
-                          print("dexter $image_path");
+                          File image = File(image_path);
+                          List<int> imageBytes = image.readAsBytesSync();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Characteristics(
+                                  image: base64Encode(imageBytes)),
+                            ),
+                          );
                         }
                       },
                       backgroundColor: ColorTheme.accentColor,
@@ -57,15 +69,16 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         final String? image_path =
                             await pickImage(ImageSource.gallery);
                         if (image_path != null) {
-                          print("dexter $image_path");
+                          File image = File(image_path);
+                          List<int> imageBytes = image.readAsBytesSync();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Characteristics(
+                                  image: base64Encode(imageBytes)),
+                            ),
+                          );
                         }
-                      },
-                      backgroundColor: ColorTheme.accentColor,
-                    ),
-                    CustomButton(
-                      text: 'Select map demo',
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/select_map');
                       },
                       backgroundColor: ColorTheme.accentColor,
                     ),

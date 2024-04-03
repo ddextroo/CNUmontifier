@@ -56,7 +56,10 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => Characteristics(
-                                  image: base64Encode(imageBytes)),
+                                image: base64Encode(imageBytes),
+                                latitude: 0,
+                                longitude: 0,
+                              ),
                             ),
                           );
                         }
@@ -75,7 +78,10 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => Characteristics(
-                                  image: base64Encode(imageBytes)),
+                                image: base64Encode(imageBytes),
+                                latitude: 0,
+                                longitude: 0,
+                              ),
                             ),
                           );
                         }

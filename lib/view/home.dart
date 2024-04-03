@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'scan.dart';
 import 'map.dart';
-import 'gallery.dart';
 import 'user.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedPage = 0;
 
-  final List<Widget> _pages = [ScannerScreen(), Map(), Gallery(), User()];
+  final List<Widget> _pages = [ScannerScreen(), Map(), User()];
 
   @override
   Widget build(BuildContext context) {
@@ -52,22 +51,12 @@ class _HomeState extends State<Home> {
                         height: 25,
                         width: 25,
                         fit: BoxFit.scaleDown),
-                    label: ''   ),
+                    label: ''),
                 BottomNavigationBarItem(
                     icon: SvgPicture.asset(
                         _selectedPage == 1
                             ? 'assets/icons/map-pin-fill.svg'
                             : 'assets/icons/map-pin-line.svg',
-                        color: ColorTheme.accentColor,
-                        height: 25,
-                        width: 25,
-                        fit: BoxFit.scaleDown),
-                    label: ''),
-                BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                        _selectedPage == 2
-                            ? 'assets/icons/gallery-fill.svg'
-                            : 'assets/icons/gallery-line.svg',
                         color: ColorTheme.accentColor,
                         height: 25,
                         width: 25,

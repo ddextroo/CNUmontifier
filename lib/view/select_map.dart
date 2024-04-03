@@ -1,10 +1,22 @@
 import 'package:cnumontifier/widgets/button.dart';
+import 'package:cnumontifier/widgets/scan/result.dart';
 import 'package:cnumontifier/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class SelectMap extends StatefulWidget {
+  final String image;
+  final double latitude;
+  final double longitude;
+
+  const SelectMap(
+      {Key? key,
+      required this.image,
+      required this.latitude,
+      required this.longitude})
+      : super(key: key);
+
   @override
   _SelectMapState createState() => _SelectMapState();
 }
@@ -15,6 +27,7 @@ class _SelectMapState extends State<SelectMap> {
 
   Location location = new Location();
   LatLng? _currentPosition;
+  late bool flag = false;
 
   Future<bool> requestPermission() async {
     final permission = await location.requestPermission();
@@ -30,6 +43,14 @@ class _SelectMapState extends State<SelectMap> {
           setState(() {
             _currentPosition =
                 LatLng(currentLocation.latitude!, currentLocation.longitude!);
+            if (widget.latitude != 0 && widget.longitude != 0 && !flag) {
+              _markers.add(Marker(
+                markerId: MarkerId(
+                    widget.latitude.toString() + widget.longitude.toString()),
+                position: LatLng(widget.latitude, widget.longitude),
+              ));
+              flag = true;
+            }
           });
         });
       }
@@ -76,6 +97,16 @@ class _SelectMapState extends State<SelectMap> {
               text: 'Proceed',
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Characteristics(
+                      image: widget.image,
+                      latitude: position.latitude,
+                      longitude: position.longitude,
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -88,7 +119,7 @@ class _SelectMapState extends State<SelectMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(text: "Select place", textAlign: TextAlign.center),
+        title: CustomText(text: "Select location", textAlign: TextAlign.center),
       ),
       body: GoogleMap(
         zoomControlsEnabled: true,
@@ -97,7 +128,9 @@ class _SelectMapState extends State<SelectMap> {
         scrollGesturesEnabled: true,
         mapType: MapType.normal,
         initialCameraPosition: CameraPosition(
-          target: _currentPosition!,
+          target: widget.latitude != 0 && widget.longitude != 0
+              ? LatLng(widget.latitude, widget.longitude)
+              : _currentPosition!,
           zoom: 15,
         ),
         markers: _markers,

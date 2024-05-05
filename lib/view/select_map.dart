@@ -9,12 +9,14 @@ class SelectMap extends StatefulWidget {
   final String image;
   final double latitude;
   final double longitude;
+  final bool edit;
 
   const SelectMap(
       {Key? key,
       required this.image,
       required this.latitude,
-      required this.longitude})
+      required this.longitude,
+      required this.edit})
       : super(key: key);
 
   @override
@@ -58,15 +60,17 @@ class _SelectMapState extends State<SelectMap> {
   }
 
   void _onMapTap(LatLng position) {
-    setState(() {
-      _markers.clear();
-      _markers.add(Marker(
-        markerId: MarkerId(
-            position.latitude.toString() + position.longitude.toString()),
-        position: position,
-      ));
-    });
-    _showMarkerInfo(position);
+    if (widget.edit) {
+      setState(() {
+        _markers.clear();
+        _markers.add(Marker(
+          markerId: MarkerId(
+              position.latitude.toString() + position.longitude.toString()),
+          position: position,
+        ));
+      });
+      _showMarkerInfo(position);
+    }
   }
 
   void _showMarkerInfo(LatLng position) {
@@ -119,7 +123,9 @@ class _SelectMapState extends State<SelectMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(text: "Select location", textAlign: TextAlign.center),
+        title: CustomText(
+            text: widget.edit ? "Select location" : "View location",
+            textAlign: TextAlign.center),
       ),
       body: GoogleMap(
         zoomControlsEnabled: true,

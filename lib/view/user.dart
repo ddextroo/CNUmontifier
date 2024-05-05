@@ -4,11 +4,13 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnumontifier/service/auth_service.dart';
 import 'package:cnumontifier/service/leaf_collection_service.dart';
+import 'package:cnumontifier/view/select_map.dart';
 import 'package:cnumontifier/widgets/button.dart';
 import 'package:cnumontifier/widgets/colors.dart';
 import 'package:cnumontifier/widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import './../controller/signin_controller.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -41,6 +43,204 @@ class _UserState extends State<User> {
 
   SignInController _signInController = SignInController();
 
+  void _showModal(BuildContext context, DocumentSnapshot leafDoc) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25.0),
+          topRight: Radius.circular(25.0),
+        ),
+      ),
+      clipBehavior: Clip.hardEdge,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 150, // Adjust the height as needed
+                width: MediaQuery.of(context).size.width,
+                child: Base64ImageWidget(
+                  base64Image: leafDoc["leafImage"],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: CustomText(
+                  text: "${leafDoc["leafName"]}",
+                  textAlign: TextAlign.center,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/icons/information-2-line.svg",
+                        width: 20,
+                        height: 20,
+                        color: ColorTheme.bgColor,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: CustomText(
+                          text: "Characteristics",
+                          textAlign: TextAlign.left,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "Accuracy",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "${leafDoc["leafAccuracy"]}",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Slider(
+                      min: 0.0,
+                      max: 100.0,
+                      value: leafDoc["leafAccuracy"],
+                      divisions: 4,
+                      onChanged: (double value) {},
+                      label: "${leafDoc["leafName"]}",
+                    ),
+                  ),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "Shape",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "${leafDoc["leafShape"]}",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "Leaf Area",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "${leafDoc["leafArea"]}",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomButton(
+                  text: "View location",
+                  onPressed: () {
+                    // Add functionality here
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SelectMap(
+                          image: leafDoc["leafImage"],
+                          latitude: leafDoc["latitude"],
+                          longitude: leafDoc["longitude"],
+                          edit: false,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ], // Removed extra closing parenthesis here
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,8 +264,7 @@ class _UserState extends State<User> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data!.exists) {
                   return FutureBuilder<List<DocumentSnapshot>>(
-                    future:
-                        leafService.getLeafInfo(), // Fetch leaf info separately
+                    future: leafService.getLeafInfoByUid(_userId),
                     builder: (BuildContext context,
                         AsyncSnapshot<List<DocumentSnapshot>> leafSnapshot) {
                       if (leafSnapshot.connectionState ==
@@ -152,8 +351,12 @@ class _UserState extends State<User> {
                                                 index % 2 == 0 ? 2 : 1,
                                             mainAxisCellCount:
                                                 index % 2 == 0 ? 1 : 2,
-                                            child: Base64ImageWidget(
-                                              base64Image: leafImage,
+                                            child: InkWell(
+                                              onTap: () => _showModal(context,
+                                                  leafSnapshot.data![index]),
+                                              child: Base64ImageWidget(
+                                                base64Image: leafImage,
+                                              ),
                                             ),
                                           );
                                         },

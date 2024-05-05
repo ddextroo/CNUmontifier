@@ -13,20 +13,53 @@ class LeafService {
     }
   }
 
-  Future<void> leafStore(String? uid, String leafImageBase64, double leafArea,
-      double latitude, double longitude, String leafShape) async {
+  Future<void> leafStore(
+    String? uid,
+    double leafAccuracy,
+    String leafName,
+    String leafImageBase64,
+    double leafArea,
+    double latitude,
+    double longitude,
+    String leafShape,
+  ) async {
+    String docId = FirebaseFirestore.instance.collection('leaf').doc().id;
+
     CollectionReference users = FirebaseFirestore.instance.collection('leaf');
     return users
-        .doc(uid)
+        .doc(docId)
         .set({
           'uid': uid,
+          'leafAccuracy': leafAccuracy,
+          'leafName': leafName,
           'leafImage': leafImageBase64,
           'leafArea': leafArea,
           'latitude': latitude,
           'longitude': longitude,
           'leafShape': leafShape,
         })
-        .then((value) => debugPrint("Leaf data added"))
+        .then((value) => debugPrint("Leaf data added with ID: $docId"))
         .catchError((error) => debugPrint("Error adding leaf data: $error"));
+  }
+
+  Future<List<DocumentSnapshot>> getLeafInfoByUid(String? uid) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('leaf')
+          .where('uid', isEqualTo: uid)
+          .get();
+
+      List<DocumentSnapshot> leafDocs = querySnapshot.docs;
+
+      if (leafDocs.isNotEmpty) {
+        return leafDocs;
+      } else {
+        print("No leaf documents found with uid: $uid");
+        return [];
+      }
+    } catch (e) {
+      print("Error retrieving leaf documents by uid: $e");
+      return [];
+    }
   }
 }

@@ -326,6 +326,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tell
                                   longitude: widget.longitude != 0
                                       ? widget.longitude
                                       : currentLongitude,
+                                  edit: true,
                                 ),
                               ),
                             );
@@ -391,6 +392,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tell
                                 if (_userId != null) {
                                   leafService.leafStore(
                                     _userId,
+                                    snapshot.data?["confidence"],
+                                    snapshot.data?["classification"]
+                                        .substring(2),
                                     widget.image,
                                     31,
                                     currentLatitude,

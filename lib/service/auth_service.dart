@@ -4,38 +4,53 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
- final FirebaseAuth _auth = FirebaseAuth.instance;
- final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
- Future<UserCredential?> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
     return await _auth.signInWithCredential(credential);
- }
+  }
 
- Future<void> signOut() async {
+  Future<void> signOut() async {
     await _auth.signOut();
     await _googleSignIn.signOut();
- }
+  }
 
- Future<void>userStore(User? user) async {
-    if (user != null) {
-      CollectionReference users = FirebaseFirestore.instance.collection('users');
-      return users
-        .doc(user.uid)
-        .set({
-          'fullname' : user.displayName,
-          'avatar' : user.photoURL,
-          'uid' : user.uid,
-          'email': user.email,
-          'timestamp': DateTime.now().millisecondsSinceEpoch,
-        })
-        .then((value) => debugPrint("Added"))
-        .catchError((error) => debugPrint("Error ${error}"));
+  Future<DocumentSnapshot?> getUserInfo(String uid) async {
+    try {
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        return userDoc;
+      }
+    } catch (e) {
+      return null;
     }
- }
+    return null;
+  }
+
+  Future<void> userStore(User? user) async {
+    if (user != null) {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      return users
+          .doc(user.uid)
+          .set({
+            'fullname': user.displayName,
+            'avatar': user.photoURL,
+            'uid': user.uid,
+            'email': user.email,
+            'timestamp': DateTime.now().millisecondsSinceEpoch,
+          })
+          .then((value) => debugPrint("Added"))
+          .catchError((error) => debugPrint("Error $error"));
+    }
+  }
 }

@@ -23,8 +23,7 @@ class CustomText extends StatelessWidget {
     return Text(
       text,
       textAlign: textAlign, // Pass text alignment to the Text widget
-       style: 
-       GoogleFonts.poppins(
+      style: GoogleFonts.poppins(
         textStyle: TextStyle(
           color: color,
           fontSize: fontSize,

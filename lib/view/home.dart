@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedPage = 0;
 
-  final List<Widget> _pages = [ScannerScreen(), Map(), User()];
+  final List<Widget> _pages = [ScannerScreen(), const Map(), const User()];
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
                     label: ''),
                 BottomNavigationBarItem(
                     icon: SvgPicture.asset(
-                        _selectedPage == 3
+                        _selectedPage == 2
                             ? 'assets/icons/user-fill.svg'
                             : 'assets/icons/user-line.svg',
                         color: ColorTheme.accentColor,

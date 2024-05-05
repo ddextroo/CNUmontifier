@@ -6,9 +6,12 @@ import 'package:cnumontifier/view/select_map.dart';
 import 'package:cnumontifier/widgets/CustomText.dart';
 import 'package:cnumontifier/widgets/button.dart';
 import 'package:cnumontifier/widgets/colors.dart';
+import 'package:cnumontifier/service/leaf_collection_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Characteristics extends StatefulWidget {
   final String image;
@@ -27,9 +30,38 @@ class Characteristics extends StatefulWidget {
 }
 
 class _CharacteristicsState extends State<Characteristics> {
+  double currentLatitude = 0.0;
+  double currentLongitude = 0.0;
+
+  String? _userId;
+  LeafService leafService = LeafService();
   @override
   void initState() {
     super.initState();
+    _getCurrentLocation();
+    _fetchUserId();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      setState(() {
+        currentLatitude = position.latitude;
+        currentLongitude = position.longitude;
+      });
+    } catch (e) {
+      print("Error getting current location: $e");
+    }
+  }
+
+  Future<void> _fetchUserId() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        _userId = user.uid;
+      });
+    }
   }
 
   @override
@@ -159,7 +191,7 @@ class _CharacteristicsState extends State<Characteristics> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 5.0, horizontal: 10.0),
                                   child: CustomText(
-                                    text: "Accuracy",
+                                    text: "Shape",
                                     textAlign: TextAlign.left,
                                     fontSize: 14,
                                   ),
@@ -171,39 +203,7 @@ class _CharacteristicsState extends State<Characteristics> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 5.0, horizontal: 10.0),
                                   child: CustomText(
-                                    text: "${snapshot.data?["confidence"]}",
-                                    textAlign: TextAlign.left,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5.0, horizontal: 10.0),
-                                  child: CustomText(
-                                    text: "Accuracy",
-                                    textAlign: TextAlign.left,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                              Flexible(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5.0, horizontal: 10.0),
-                                  child: CustomText(
-                                    text: "${snapshot.data?["confidence"]}",
+                                    text: "Elliptic",
                                     textAlign: TextAlign.left,
                                     fontSize: 14,
                                   ),
@@ -223,7 +223,7 @@ class _CharacteristicsState extends State<Characteristics> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 5.0, horizontal: 10.0),
                                   child: CustomText(
-                                    text: "Accuracy",
+                                    text: "Leaf Area",
                                     textAlign: TextAlign.left,
                                     fontSize: 14,
                                   ),
@@ -278,9 +278,7 @@ class _CharacteristicsState extends State<Characteristics> {
                           padding: EdgeInsets.symmetric(horizontal: 10.0),
                           child: CustomText(
                             text: """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tellus bibendum porttitor. In vitae odio semper, porta mauris ut, finibus quam. Aliquam volutpat augue eget quam tincidunt, vel accumsan quam varius. Mauris placerat quam sem, in auctor risus consectetur ac. Integer feugiat mi at facilisis maximus. Proin posuere molestie sapien sed congue. In hac habitasse platea dictumst. Integer at odio eget est malesuada lacinia vel non arcu. Aliquam nulla est, congue et lectus quis, hendrerit porta felis. Aliquam iaculis orci eu dolor varius finibus. Suspendisse ac tortor molestie, hendrerit tellus mattis, commodo sapien. Maecenas eget faucibus tellus, ac auctor leo. Nulla facilisi. Curabitur felis risus, laoreet pulvinar ex nec, porttitor laoreet nulla.
-
-Curabitur pharetra in est quis mattis. Ut iaculis iaculis justo nec euismod. Sed eget quam augue. Aliquam luctus purus varius purus convallis consectetur. Donec lacus dui, hendrerit at est id, facilisis volutpat ante. Nam vitae pharetra enim. Nullam semper augue eget sem tincidunt, in pretium risus vestibulum. Quisque faucibus ullamcorper pharetra. Proin id odio vestibulum, vestibulum lacus sit amet, dignissim arcu. Morbi luctus blandit posuere. Etiam ultricies quis mi et pretium. Nullam ut erat accumsan, suscipit diam non, eleifend enim. Donec sapien tellus, fringilla ac aliquet ut, facilisis sed est. Nulla blandit consectetur ipsum non scelerisque. Donec eu placerat tellus. Mauris at vehicula sem.""",
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tellus bibendum porttitor. In vitae odio semper, porta mauris ut, finibus quam. Aliquam volutpat augue eget quam tincidunt, vel accumsan quam varius. Mauris placerat quam sem, in auctor risus consectetur ac. Integer feugiat mi at facilisis maximus. Proin posuere molestie sapien sed congue. In hac habitasse platea dictumst. Integer at odio eget est malesuada lacinia vel non arcu. Aliquam nulla est, congue et lectus quis, hendrerit porta felis. Aliquam iaculis orci eu dolor varius finibus. Suspendisse ac tortor molestie, hendrerit tellus mattis, commodo sapien. Maecenas eget faucibus tellus, ac auctor leo. Nulla facilisi. Curabitur felis risus, laoreet pulvinar ex nec, porttitor laoreet nulla.""",
                             textAlign: TextAlign.justify,
                             fontSize: 12,
                           ),
@@ -324,10 +322,10 @@ Curabitur pharetra in est quis mattis. Ut iaculis iaculis justo nec euismod. Sed
                                   image: widget.image,
                                   latitude: widget.latitude != 0
                                       ? widget.latitude
-                                      : 0,
+                                      : currentLatitude,
                                   longitude: widget.longitude != 0
                                       ? widget.longitude
-                                      : 0,
+                                      : currentLongitude,
                                 ),
                               ),
                             );
@@ -349,7 +347,7 @@ Curabitur pharetra in est quis mattis. Ut iaculis iaculis justo nec euismod. Sed
                                       padding: const EdgeInsets.only(left: 5.0),
                                       child: CustomText(
                                         text:
-                                            "Latitude: ${widget.latitude != 0.000000000000 ? widget.latitude : 0.000000000000}",
+                                            "Latitude: ${widget.latitude != 0 ? widget.latitude : currentLatitude}",
                                         fontSize: 14,
                                         textAlign: TextAlign.center,
                                         color: ColorTheme.textColor,
@@ -373,7 +371,7 @@ Curabitur pharetra in est quis mattis. Ut iaculis iaculis justo nec euismod. Sed
                                       padding: const EdgeInsets.only(left: 5.0),
                                       child: CustomText(
                                         text:
-                                            "Longitude: ${widget.longitude != 0.000000000000 ? widget.longitude : 0.000000000000}",
+                                            "Longitude: ${widget.longitude != 0 ? widget.longitude : currentLongitude}",
                                         fontSize: 14,
                                         textAlign: TextAlign.center,
                                         color: ColorTheme.textColor,
@@ -388,7 +386,19 @@ Curabitur pharetra in est quis mattis. Ut iaculis iaculis justo nec euismod. Sed
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CustomButton(
-                              text: "Add to collection", onPressed: () {}),
+                              text: "Add to collection",
+                              onPressed: () {
+                                if (_userId != null) {
+                                  leafService.leafStore(
+                                    _userId,
+                                    widget.image,
+                                    31,
+                                    currentLatitude,
+                                    currentLongitude,
+                                    "ambot",
+                                  );
+                                }
+                              }),
                         )
                       ],
                     ),

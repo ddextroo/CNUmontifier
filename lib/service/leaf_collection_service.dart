@@ -2,17 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class LeafService {
-  Future<DocumentSnapshot?> getLeafInfo(String uid) async {
+  Future<List<DocumentSnapshot>> getLeafInfo() async {
     try {
-      DocumentSnapshot leafDoc =
-          await FirebaseFirestore.instance.collection('leaf').doc(uid).get();
-      if (leafDoc.exists) {
-        return leafDoc;
-      }
+      QuerySnapshot leafDocs =
+          await FirebaseFirestore.instance.collection('leaf').get();
+      return leafDocs.docs;
     } catch (e) {
-      return null;
+      print("Error retrieving leaf documents: $e");
+      return [];
     }
-    return null;
   }
 
   Future<void> leafStore(String? uid, String leafImageBase64, double leafArea,

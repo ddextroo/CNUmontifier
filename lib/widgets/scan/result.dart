@@ -32,6 +32,7 @@ class Characteristics extends StatefulWidget {
 class _CharacteristicsState extends State<Characteristics> {
   double currentLatitude = 0.0;
   double currentLongitude = 0.0;
+  final GlobalKey<_CharacteristicsState> _characteristicsKey = GlobalKey();
 
   String? _userId;
   LeafService leafService = LeafService();
@@ -275,10 +276,89 @@ class _CharacteristicsState extends State<Characteristics> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: CustomText(
                             text: """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tellus bibendum porttitor. In vitae odio semper, porta mauris ut, finibus quam. Aliquam volutpat augue eget quam tincidunt, vel accumsan quam varius. Mauris placerat quam sem, in auctor risus consectetur ac. Integer feugiat mi at facilisis maximus. Proin posuere molestie sapien sed congue. In hac habitasse platea dictumst. Integer at odio eget est malesuada lacinia vel non arcu. Aliquam nulla est, congue et lectus quis, hendrerit porta felis. Aliquam iaculis orci eu dolor varius finibus. Suspendisse ac tortor molestie, hendrerit tellus mattis, commodo sapien. Maecenas eget faucibus tellus, ac auctor leo. Nulla facilisi. Curabitur felis risus, laoreet pulvinar ex nec, porttitor laoreet nulla.""",
+Cinnamomum mindanaense elm. commonly known as ‘Mindanao cinnamon, mana, and kami’ is an endemic cinnamon species found in the Philippines. C. mindanaense is a small aromatic tree reaching up to 10 meters tall and 3 decimeters thick. It has a dense elongated crown. The bark are closely allied to C. zeylanicum as well as in appearance, taste and odor. It has been listed as Least Concern (LC) in the IUCN Red List.""",
+                            textAlign: TextAlign.justify,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const Divider(),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/icons/map-pin-fill.svg",
+                                  width: 20,
+                                  height: 20,
+                                  color: ColorTheme.bgColor,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: CustomText(
+                                    text: "Location",
+                                    textAlign: TextAlign.left,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: CustomText(
+                            text: """
+C. mindanaense is suited to live in varying elevations of about  200-400 meters above sea level. It is widely distributed in the province of Davao del Sur, Zamboanga, Surigao, Lanao del Norte, Bohol and Samar. C. mindanaense is also found to be naturally grown in the limestone forest of Boljoon, Argao, and Alcoy Cebu.
+""",
+                            textAlign: TextAlign.justify,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const Divider(),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/icons/camera-lens-fill.svg",
+                                  width: 20,
+                                  height: 20,
+                                  color: ColorTheme.bgColor,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: CustomText(
+                                    text: "Leaf Morphology",
+                                    textAlign: TextAlign.left,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: CustomText(
+                            text: """
+C. mindanaense has four leaf shapes namely; oblong, oblong-ovate, ovate, and lanceolate. Its venation is trinerved or triplinerved patterns. C. mindanaense is indistinguishable to Cinnamomum burmanii (found in Indonesia) in terms of leaf morphology.""",
                             textAlign: TextAlign.justify,
                             fontSize: 12,
                           ),
@@ -334,7 +414,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tell
                           child: Column(
                             children: [
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -358,7 +439,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tell
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -387,22 +469,41 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor elit non tell
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CustomButton(
-                              text: "Add to collection",
-                              onPressed: () {
-                                if (_userId != null) {
-                                  leafService.leafStore(
-                                    _userId,
-                                    snapshot.data?["confidence"],
-                                    snapshot.data?["classification"]
-                                        .substring(2),
-                                    widget.image,
-                                    31,
-                                    currentLatitude,
-                                    currentLongitude,
-                                    "ambot",
+                            text: "Add to collection",
+                            onPressed: () async {
+                              if (_userId != null) {
+                                await leafService.leafStore(
+                                  _userId,
+                                  snapshot.data?["confidence"],
+                                  snapshot.data?["classification"].substring(2),
+                                  widget.image,
+                                  31,
+                                  currentLatitude,
+                                  currentLongitude,
+                                  "ambot",
+                                );
+
+                                final context =
+                                    _characteristicsKey.currentContext;
+                                if (context != null && context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Leaf collection added successfully'),
+                                      duration: Duration(seconds: 2),
+                                    ),
                                   );
                                 }
-                              }),
+
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
+
+                                if (context != null && context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              }
+                            },
+                          ),
                         )
                       ],
                     ),

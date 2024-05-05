@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cnumontifier/service/auth_service.dart';
 import 'package:cnumontifier/service/leaf_collection_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 class Map extends StatefulWidget {
   const Map({Key? key}) : super(key: key);
@@ -19,52 +18,31 @@ class _MapState extends State<Map> {
   LatLng? _currentPosition;
   AuthService authService = AuthService();
   LeafService leafService = LeafService();
+  Location location = Location();
 
-  double currentLatitude = 0.0;
-  double currentLongitude = 0.0;
+  double? currentLatitude = 0;
+  double? currentLongitude = 0;
+
+  Future<bool> requestPermission() async {
+    final permission = await location.requestPermission();
+    return permission == PermissionStatus.granted;
+  }
 
   @override
   void initState() {
     super.initState();
-    _requestLocationPermission();
-    _getCurrentLocation();
-  }
-
-  Future<void> _requestLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return;
+    requestPermission().then((granted) {
+      if (granted) {
+        if (currentLatitude == 0 && currentLongitude == 0) {
+          location.onLocationChanged.listen((LocationData currentLocation) {
+            setState(() {
+              currentLatitude = currentLocation.latitude;
+              currentLongitude = currentLocation.longitude;
+            });
+          });
+        }
       }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return;
-    }
-  }
-
-  Future<void> _getCurrentLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
-      if (mounted) {
-        setState(() {
-          currentLatitude = position.latitude;
-          currentLongitude = position.longitude;
-        });
-      }
-    } catch (e) {
-      print("Error getting current location: $e");
-    }
+    });
   }
 
   @override
@@ -74,11 +52,12 @@ class _MapState extends State<Map> {
         future: leafService.getLeafInfo(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError ||
               !snapshot.hasData ||
               snapshot.data!.isEmpty) {
-            return Center(child: Text('Error retrieving leaf information.'));
+            return const Center(
+                child: Text('Error retrieving leaf information.'));
           } else {
             var leafDocs = snapshot.data!;
             return _currentPosition != null
@@ -89,10 +68,7 @@ class _MapState extends State<Map> {
                     scrollGesturesEnabled: true,
                     mapType: MapType.normal,
                     initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                          leafDocs[0]["latitude"],
-                          leafDocs[0][
-                              "longitude"]), // Just an example to get the first document's position
+                      target: LatLng(currentLatitude!, currentLongitude!),
                       zoom: 30,
                     ),
                     markers: leafDocs

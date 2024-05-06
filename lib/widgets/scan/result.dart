@@ -91,7 +91,7 @@ class _CharacteristicsState extends State<Characteristics> {
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     child: Base64ImageWidget(
-                      base64Image: widget.image,
+                      base64Image: snapshot.data?["result_image"],
                     ),
                   ),
                   Container(
@@ -99,7 +99,7 @@ class _CharacteristicsState extends State<Characteristics> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 5.0, horizontal: 10.0),
                     child: CustomText(
-                      text: "${snapshot.data?["classification"].substring(2)}",
+                      text: "${snapshot.data?["label"]}",
                       textAlign: TextAlign.center,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -176,8 +176,7 @@ class _CharacteristicsState extends State<Characteristics> {
                             value: snapshot.data?["confidence"],
                             divisions: 4,
                             onChanged: (double value) {},
-                            label:
-                                "${snapshot.data?["confidence"].toStringAsFixed(2)}",
+                            label: "${snapshot.data?["label"]}",
                           ),
                         ),
                         const Divider(),
@@ -203,7 +202,7 @@ class _CharacteristicsState extends State<Characteristics> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 5.0, horizontal: 10.0),
                                   child: CustomText(
-                                    text: "Elliptic",
+                                    text: snapshot.data?["leaf_shape"],
                                     textAlign: TextAlign.left,
                                     fontSize: 14,
                                   ),
@@ -235,7 +234,9 @@ class _CharacteristicsState extends State<Characteristics> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 5.0, horizontal: 10.0),
                                   child: CustomText(
-                                    text: "${snapshot.data?["confidence"]}",
+                                    text: snapshot.data?["leaf_area"]
+                                            ?.toString() ??
+                                        '',
                                     textAlign: TextAlign.left,
                                     fontSize: 14,
                                   ),
@@ -474,17 +475,17 @@ C. mindanaense has four leaf shapes namely; oblong, oblong-ovate, ovate, and lan
                                 await leafService.leafStore(
                                   _userId, // UID
                                   snapshot.data?["confidence"], // ACCURACY
-                                  snapshot.data?["classification"]
+                                  snapshot.data?["label"]
                                       .substring(2), // LEAF NAME
-                                  widget.image, // LEAF IMAGE
-                                  31, // LEAF AREA
+                                  snapshot.data?["result_image"], // LEAF IMAGE
+                                  snapshot.data?["leaf_area"], // LEAF AREA
                                   widget.latitude != 0
                                       ? widget.latitude
                                       : currentLatitude, // LATITUDE
                                   widget.longitude != 0
                                       ? widget.longitude
                                       : currentLongitude, // LONGITUDE
-                                  "ambot", // LEAF SHAPE
+                                  snapshot.data?["leaf_shape"], // LEAF SHAPE
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

@@ -22,6 +22,7 @@ class LeafService {
     double latitude,
     double longitude,
     String leafShape,
+    String leafImageCalculated,
   ) async {
     String docId = FirebaseFirestore.instance.collection('leaf').doc().id;
 

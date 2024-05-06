@@ -91,7 +91,7 @@ class _CharacteristicsState extends State<Characteristics> {
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     child: Base64ImageWidget(
-                      base64Image: snapshot.data?["result_image"],
+                      base64Image: widget.image,
                     ),
                   ),
                   Container(
@@ -486,6 +486,8 @@ C. mindanaense has four leaf shapes namely; oblong, oblong-ovate, ovate, and lan
                                       ? widget.longitude
                                       : currentLongitude, // LONGITUDE
                                   snapshot.data?["leaf_shape"], // LEAF SHAPE
+                                  snapshot.data?[
+                                      "result_image"], // LEAF IMAGE WITH CALCULATIONS
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

@@ -13,7 +13,7 @@ class LeafService {
     }
   }
 
-  Future<void> leafStore(
+  Future<String> leafStore(
     String? uid,
     double leafAccuracy,
     String leafName,
@@ -26,21 +26,22 @@ class LeafService {
   ) async {
     String docId = FirebaseFirestore.instance.collection('leaf').doc().id;
 
-    CollectionReference users = FirebaseFirestore.instance.collection('leaf');
-    return users
-        .doc(docId)
-        .set({
-          'uid': uid,
-          'leafAccuracy': leafAccuracy,
-          'leafName': leafName,
-          'leafImage': leafImageBase64,
-          'leafArea': leafArea,
-          'latitude': latitude,
-          'longitude': longitude,
-          'leafShape': leafShape,
-        })
-        .then((value) => debugPrint("Leaf data added with ID: $docId"))
-        .catchError((error) => debugPrint("Error adding leaf data: $error"));
+    try {
+      await FirebaseFirestore.instance.collection('leaf').doc(docId).set({
+        'uid': uid,
+        'leafAccuracy': leafAccuracy,
+        'leafName': leafName,
+        'leafImage': leafImageBase64,
+        'leafArea': leafArea,
+        'latitude': latitude,
+        'longitude': longitude,
+        'leafShape': leafShape,
+        'leafImageCalculated': leafImageCalculated,
+      });
+      return "Leaf data added successfully with ID: $docId";
+    } catch (error) {
+      return "Error adding leaf data: $error";
+    }
   }
 
   Future<List<DocumentSnapshot>> getLeafInfoByUid(String? uid) async {

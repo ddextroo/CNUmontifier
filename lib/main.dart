@@ -1,6 +1,5 @@
 import 'package:cnumontifier/controller/classify_image_controller.dart';
 import 'package:cnumontifier/view/home.dart';
-import 'package:cnumontifier/view/select_map.dart';
 import 'package:cnumontifier/widgets/scan/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

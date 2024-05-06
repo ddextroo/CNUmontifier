@@ -336,7 +336,7 @@ C. mindanaense is suited to live in varying elevations of about  200-400 meters 
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SvgPicture.asset(
-                                  "assets/icons/camera-lens-fill.svg",
+                                  "assets/icons/camera-lens-line.svg",
                                   width: 20,
                                   height: 20,
                                   color: ColorTheme.bgColor,

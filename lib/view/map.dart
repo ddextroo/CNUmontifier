@@ -250,6 +250,70 @@ class _MapState extends State<Map> {
                             ],
                           ),
                         ),
+                        const Divider(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0, horizontal: 10.0),
+                                  child: CustomText(
+                                    text: "Latitude",
+                                    textAlign: TextAlign.left,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0, horizontal: 10.0),
+                                  child: CustomText(
+                                    text: "${leafDoc["latitude"]}",
+                                    textAlign: TextAlign.left,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0, horizontal: 10.0),
+                                  child: CustomText(
+                                    text: "Longitude",
+                                    textAlign: TextAlign.left,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0, horizontal: 10.0),
+                                  child: CustomText(
+                                    text: "${leafDoc["longitude"]}",
+                                    textAlign: TextAlign.left,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ],

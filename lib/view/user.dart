@@ -15,7 +15,7 @@ import './../controller/signin_controller.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class User extends StatefulWidget {
-  const User({Key? key});
+  const User({Key? key}) : super(key: key);
 
   @override
   State<User> createState() => _UserState();
@@ -212,6 +212,70 @@ class _UserState extends State<User> {
                       ],
                     ),
                   ),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "Latitude",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "${leafDoc["latitude"]}",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "Longitude",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: CustomText(
+                              text: "${leafDoc["longitude"]}",
+                              textAlign: TextAlign.left,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               Padding(
@@ -259,7 +323,7 @@ class _UserState extends State<User> {
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot?> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data!.exists) {

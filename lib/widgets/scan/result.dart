@@ -32,7 +32,6 @@ class Characteristics extends StatefulWidget {
 class _CharacteristicsState extends State<Characteristics> {
   double currentLatitude = 0.0;
   double currentLongitude = 0.0;
-  final GlobalKey<_CharacteristicsState> _characteristicsKey = GlobalKey();
 
   String? _userId;
   LeafService leafService = LeafService();
@@ -473,34 +472,28 @@ C. mindanaense has four leaf shapes namely; oblong, oblong-ovate, ovate, and lan
                             onPressed: () async {
                               if (_userId != null) {
                                 await leafService.leafStore(
-                                  _userId,
-                                  snapshot.data?["confidence"],
-                                  snapshot.data?["classification"].substring(2),
-                                  widget.image,
-                                  31,
-                                  currentLatitude,
-                                  currentLongitude,
-                                  "ambot",
+                                  _userId, // UID
+                                  snapshot.data?["confidence"], // ACCURACY
+                                  snapshot.data?["classification"]
+                                      .substring(2), // LEAF NAME
+                                  widget.image, // LEAF IMAGE
+                                  31, // LEAF AREA
+                                  widget.latitude != 0
+                                      ? widget.latitude
+                                      : currentLatitude, // LATITUDE
+                                  widget.longitude != 0
+                                      ? widget.longitude
+                                      : currentLongitude, // LONGITUDE
+                                  "ambot", // LEAF SHAPE
                                 );
-
-                                final context =
-                                    _characteristicsKey.currentContext;
-                                if (context != null && context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Leaf collection added successfully'),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                }
-
-                                await Future.delayed(
-                                    const Duration(seconds: 2));
-
-                                if (context != null && context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Leaf collection added successfully'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                                Navigator.of(context).pop();
                               }
                             },
                           ),

@@ -494,8 +494,7 @@ C. mindanaense has four leaf shapes namely; oblong, oblong-ovate, ovate, and lan
                                   String message = await leafService.leafStore(
                                     _userId, // UID
                                     snapshot.data?["confidence"], // ACCURACY
-                                    snapshot.data?["label"]
-                                        .substring(2), // LEAF NAME
+                                    snapshot.data?["label"], // LEAF NAME
                                     widget.image, // LEAF IMAGE
                                     snapshot.data?["leaf_area"], // LEAF AREA
                                     widget.latitude != 0

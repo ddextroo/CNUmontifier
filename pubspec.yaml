@@ -52,6 +52,7 @@ dependencies:
   provider: ^6.1.2
   geolocator: ^11.0.0
   flutter_staggered_grid_view: ^0.7.0
+  rename_app: ^1.3.2
 
 dev_dependencies:
   flutter_test:
@@ -85,7 +86,7 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/w_bg_logo.png"
+  image_path: "assets/images/final_logo.png"
   min_sdk_android: 23
 
   # An image asset can refer to one or more resolution-specific "variants", see

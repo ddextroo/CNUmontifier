@@ -7,17 +7,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../controller/signin_controller.dart';
 
 class Login extends StatefulWidget {
- const Login({Key? key}) : super(key: key);
+  const Login({Key? key}) : super(key: key);
 
- @override
- State<Login> createState() => _LoginState();
+  @override
+  State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
- final SignInController _signinController = SignInController();
+  final SignInController _signinController = SignInController();
 
- @override
- Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
@@ -30,7 +30,8 @@ class _LoginState extends State<Login> {
         } else {
           return Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+              preferredSize:
+                  Size.fromHeight(MediaQuery.of(context).padding.top),
               child: SizedBox(
                 height: MediaQuery.of(context).padding.top,
               ),
@@ -39,11 +40,12 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.all(15.0),
               child: Center(
                 child: Container(
-                 child: Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset('assets/images/applogo.png', width: 150, height: 150),
+                      Image.asset('assets/images/final_logo.png',
+                          width: 150, height: 150),
                       Padding(
                         padding: const EdgeInsets.only(top: 60.0, bottom: 40.0),
                         child: SvgPicture.asset(
@@ -66,16 +68,17 @@ class _LoginState extends State<Login> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset('assets/images/googlelogo.png', width: 20, height: 20),
+                                Image.asset('assets/images/googlelogo.png',
+                                    width: 20, height: 20),
                                 Padding(
-                                 padding: const EdgeInsets.only(left: 5.0),
-                                 child: CustomText(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: CustomText(
                                     text: "Sign in with Google",
                                     fontSize: 14,
                                     textAlign: TextAlign.center,
                                     color: ColorTheme.textColorLight,
                                     fontWeight: FontWeight.w600,
-                                 ),
+                                  ),
                                 )
                               ],
                             ),
@@ -83,7 +86,7 @@ class _LoginState extends State<Login> {
                         ),
                       )
                     ],
-                 ),
+                  ),
                 ),
               ),
             ),
@@ -91,5 +94,5 @@ class _LoginState extends State<Login> {
         }
       },
     );
- }
+  }
 }

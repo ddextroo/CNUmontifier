@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+//w
 class ClassifyImageController extends ChangeNotifier {
   Future<Map<String, dynamic>> scanImage(String image) async {
     try {

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'scan.dart';
 import 'map.dart';
 import 'user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,6 +17,19 @@ class _HomeState extends State<Home> {
   int _selectedPage = 0;
 
   final List<Widget> _pages = [ScannerScreen(), const Map(), const User()];
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  @override
+  void initState() async {
+    // TODO: implement initState
+    final SharedPreferences prefs = await _prefs;
+    if (prefs.getInt('firstTime') == 0 || prefs.getInt('firstTime') == null) {
+      _showModal(context);
+      prefs.setInt('firstTime', 1);
+    }
+    super.initState();
+  }
+
+  void _showModal(BuildContext context) async {}
 
   @override
   Widget build(BuildContext context) {

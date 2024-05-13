@@ -17,14 +17,9 @@ class ClassifyImageController extends ChangeNotifier {
           "image": image,
         }),
       );
-
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to load data');
-      }
+      return jsonDecode(response.body);
     } catch (e) {
-      return {'error': e.toString()};
+      return {'message': e.toString()};
     }
   }
 }

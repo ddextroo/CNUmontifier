@@ -30,7 +30,17 @@ class _MapState extends State<Map> {
   @override
   void initState() {
     super.initState();
+    _getLocationPermission();
     _getCurrentLocation();
+  }
+
+  Future<void> _getLocationPermission() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+    } else if (permission == LocationPermission.deniedForever) {
+    } else {
+      _getCurrentLocation();
+    }
   }
 
   Future<void> _getCurrentLocation() async {

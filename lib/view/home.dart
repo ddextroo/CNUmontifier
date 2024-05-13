@@ -21,12 +21,12 @@ class _HomeState extends State<Home> {
   @override
   void initState() async {
     // TODO: implement initState
+    super.initState();
     final SharedPreferences prefs = await _prefs;
     if (prefs.getInt('firstTime') == 0 || prefs.getInt('firstTime') == null) {
       _showModal(context);
       prefs.setInt('firstTime', 1);
     }
-    super.initState();
   }
 
   void _showModal(BuildContext context) async {}

@@ -29,7 +29,26 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _showModal(BuildContext context) async {}
+  void _showModal(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25.0),
+          topRight: Radius.circular(25.0),
+        ),
+      ),
+      clipBehavior: Clip.hardEdge,
+      builder: (BuildContext modalContext) {
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

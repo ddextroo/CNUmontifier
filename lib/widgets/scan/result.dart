@@ -84,6 +84,13 @@ class _CharacteristicsState extends State<Characteristics> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
+            if (snapshot.data?["confidence"] == null) {
+              return Center(
+                  child: CustomText(
+                text: 'It is not mindanaense',
+                textAlign: TextAlign.center,
+              ));
+            }
             return SingleChildScrollView(
               child: Column(
                 children: [
